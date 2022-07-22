@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>StudyWise</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/styles.css') }}">
+    </head>
+    <body>
+        <ul id="navbar">
+            <span id="navbar-left">
+                <a id="logo-a" href="/">
+                    <li id="logo">StudyWise</li>
+                </a>
+                <a href="/">Go Back</a>
+            </span>
+            <span id="navbar-right">
+                <li>Register</li>
+                <li>Log in</li>
+                <li>Log out</li>
+            </span>
+        </ul>
+        <div class="lesson-list-container">
+            <ul id="lesson-list-container-top">
+                <li><button type="button" class="btn btn-blue" id="add-new-lesson">Add New Lesson</button> 
+                    <input type="text" id="search-filter" placeholder="Search for course/topic..">
+                </li>
+                <li>
+                    <button type="button" class="btn btn-green" id="select-all-deselect-all">Select All</button> 
+                    <button type="button" class="btn btn-red" id="delete-all">Delete All</button>
+                </li>
+            </ul>
+            <p id="lesson-list-container-title">Lessons Catalogue</p>
+            <ul class="lesson-list">          
+            </ul>
+        </div>
+        <script src="/static/js/script.js"></scriptsrc>></script>
+    </body>
+</html>
