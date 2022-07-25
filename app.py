@@ -156,6 +156,14 @@ def hello_world():
 def view_all_lessons():
     return render_template("view-all-lessons.html")
 
+@app.route("/register")
+def register():
+    return render_template("register.html") 
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
 @app.route("/api/lessons/modify", methods = ["POST", "DELETE", "PUT"])
 def interact_with_db():
     if request.method == "POST":

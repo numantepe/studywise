@@ -3,7 +3,7 @@
 <html>
     <head>
         <title>StudyWise</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/styles.css') }}">
+        <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
     </head>
     <body>
         <ul id="navbar">
@@ -14,8 +14,12 @@
                 <a href="/">Go Back</a>
             </span>
             <span id="navbar-right">
-                <li>Register</li>
-                <li>Log in</li>
+                <a href="/register">
+                    <li>Register</li>
+                </a>
+                <a href="/login">
+                    <li>Log in</li>
+                </a>
                 <li>Log out</li>
             </span>
         </ul>
@@ -33,6 +37,6 @@
             <ul class="lesson-list">          
             </ul>
         </div>
-        <script src="/static/js/script.js"></scriptsrc>></script>
+        <script src="/static/js/loggedin.js"></script>
     </body>
 </html>

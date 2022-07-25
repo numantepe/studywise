@@ -12,7 +12,7 @@
                     <li id="logo">StudyWise</li>
                 </a>
             </span>
-            <span id="navbar-right">   
+            <span id="navbar-right">
                 <a href="/register">
                     <li>Register</li>
                 </a>
@@ -22,15 +22,20 @@
                 <li>Log out</li>
             </span>
         </ul>
-        <div class="lesson-list-container">
-            <button type="button" class="btn btn-blue" id="add-new-lesson">Add New Lesson</button>
-            <a href="/view_all_lessons">
-                <button class="btn btn-blue" id="view-all-lessons">View All Lessons</button>
-            </a>
-            <p id="lesson-list-container-title">Today's Schedule</p>
-            <ul class="lesson-list">
-            </ul>
+        <div class="form-container">
+            <form id="login">
+                <h1>Log in</h1>
+                <div class="msg"></div>
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username">
+                </div>
+                <div>
+                    <label for="passowrd">Password:</label>
+                    <input type="text" id="password">
+                </div>
+                <button type="button" class="btn btn-blue" id="form-submit">Submit</button>
+            </form>
         </div>
-        <script src="/static/js/loggedin.js"></script>
-    </body>
+   </body>
 </html>

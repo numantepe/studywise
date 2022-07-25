@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>StudyWise</title>
+        <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    </head>
+    <body>
+        <ul id="navbar">
+            <span id="navbar-left">
+                <a id="logo-a" href="/">
+                    <li id="logo">StudyWise</li>
+                </a>
+            </span>
+            <span id="navbar-right">
+                <a href="/register">
+                    <li>Register</li>
+                </a>
+                <a href="/login">
+                    <li>Log in</li>
+                </a>
+                <li>Log out</li>
+            </span>
+        </ul>
+        <div class="form-container">
+            <form id="register-new-user">
+                <h1>Register New User</h1>
+                <div class="msg"></div>
+                <div>
+                    <label for="username">New Username:</label>
+                    <input type="text" id="username">
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="text" id="email">
+                </div>
+                <div>
+                    <label for="passowrd">Password:</label>
+                    <input type="text" id="password">
+                </div>
+                <div>
+                    <label for="passowrd">Confirm Password:</label>
+                    <input type="text" id="confirm-password">
+                </div>
+                <button type="button" class="btn btn-blue" id="form-submit">Submit</button>
+            </form>
+        </div>
+   </body>
+</html>
