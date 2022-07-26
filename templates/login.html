@@ -19,11 +19,11 @@
                 <a href="/login">
                     <li>Log in</li>
                 </a>
-                <li>Log out</li>
+                <li id="logout">Log out</li>
             </span>
         </ul>
         <div class="form-container">
-            <form id="login">
+            <form id="login-existing-user">
                 <h1>Log in</h1>
                 <div class="msg"></div>
                 <div>
@@ -32,10 +32,18 @@
                 </div>
                 <div>
                     <label for="passowrd">Password:</label>
-                    <input type="text" id="password">
+                    <input type="password" id="password">
+                </div>
+                <div>
+                    <span id="show-passwords">
+                        Show Passwords
+                    </span>
+                    <input type="checkbox" id="checkbox">
                 </div>
                 <button type="button" class="btn btn-blue" id="form-submit">Submit</button>
             </form>
         </div>
+        <script src="/static/js/login.js"></script>
+        <script src="/static/js/logout.js"></script>
    </body>
 </html>

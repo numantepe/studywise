@@ -245,16 +245,29 @@ label {
     margin-bottom: 3px;
 }
 
-input {
+input:not(#checkbox) {
     font-size: 20px;
     display: block;
     width: 100%;
     margin-bottom: 10px;
 }
 
+.msg {
+    margin-bottom: 10px;
+    color: #ff0000;
+}
+
+#show-passwords {
+    font-size: 16px;
+}
+
+#checkbox {
+    display: inline;
+}
+
 #form-submit {
     display: block;
     width: 33%;
     margin: 0 auto;
+    margin-top: 20px;
 }
-

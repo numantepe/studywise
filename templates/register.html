@@ -19,7 +19,7 @@
                 <a href="/login">
                     <li>Log in</li>
                 </a>
-                <li>Log out</li>
+                <li id="logout">Log out</li>
             </span>
         </ul>
         <div class="form-container">
@@ -35,15 +35,25 @@
                     <input type="text" id="email">
                 </div>
                 <div>
-                    <label for="passowrd">Password:</label>
-                    <input type="text" id="password">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password">
                 </div>
                 <div>
-                    <label for="passowrd">Confirm Password:</label>
-                    <input type="text" id="confirm-password">
+                    <label for="password">Confirm Password:</label>
+                    <input type="password" id="confirm-password">
                 </div>
-                <button type="button" class="btn btn-blue" id="form-submit">Submit</button>
-            </form>
+                <div>
+                    <span id="show-passwords">
+                        Show Passwords
+                    </span>
+                    <input type="checkbox" id="checkbox">
+                </div>
+                <div>
+                    <button type="button" class="btn btn-blue" id="form-submit">Submit</button>
+                </div>
+           </form>
         </div>
+        <script src="/static/js/register.js"></script>
+        <script src="/static/js/logout.js"></script>
    </body>
 </html>

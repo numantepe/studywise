@@ -11,12 +11,16 @@ function send_message_to_db(method : string, course : string, topic : string, op
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200){
             console.log("Response Type " + this.responseType);
-            console.log("Response Type " + this.responseText);
+            console.log("Response Text " + this.responseText);
+            if(this.responseText === "INVALID AUTH KEY"){
+                setTimeout(function () {window.location.replace("http://127.0.0.1:5000/login")}, 500);
+            }
         }
     };
     const apiURL = "http://127.0.0.1:5000/api/lessons/modify";
     xhttp.open(method, apiURL, true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.setRequestHeader('Authorization', localStorage.getItem("auth"));
     xhttp.send(`course=${course}&topic=${topic}&option=${option}`);
 }
 
@@ -26,13 +30,14 @@ function delete_all_selected_lessons_from_db(lessons : Object[]) : void {
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200){
             console.log("Response Type " + this.responseType);
-            console.log("Response Type " + this.responseText);
+            console.log("Response Text " + this.responseText);
         }
     };
 
     const apiURL = "http://127.0.0.1:5000/api/lessons/modify";
     xhttp.open("DELETE", apiURL, true);
     xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.setRequestHeader('Authorization', localStorage.getItem("auth"));
     let lessonlistText = JSON.stringify(lessons);
     xhttp.send(lessonlistText);
 }
@@ -240,11 +245,16 @@ let xReq : XMLHttpRequest = new XMLHttpRequest();
 xReq.onreadystatechange = function () {
     if (this.readyState === 4 && this.status === 200){
         let response = this.responseText;
-        let convertedResponse = JSON.parse(response);
-        let lessons: Lesson[] = convertedResponse;
+        if(this.responseText === "INVALID AUTH KEY"){
+            setTimeout(function () {window.location.replace("http://127.0.0.1:5000/login")}, 500);
+        }
+        else{
+            let convertedResponse = JSON.parse(response);
+            let lessons: Lesson[] = convertedResponse;
 
-        set_up_lesson_list(lessons);
-    } else {
+            set_up_lesson_list(lessons);
+        }
+    }else {
         console.log(this.responseType);
     }
 }
@@ -252,9 +262,11 @@ xReq.onreadystatechange = function () {
 if (window.location.pathname === "/"){
     const apiURL = "http://127.0.0.1:5000/api/lessons/today";
     xReq.open("GET", apiURL, true);
+    xReq.setRequestHeader('Authorization', localStorage.getItem("auth"));
     xReq.send();
 } else if (window.location.pathname === "/view_all_lessons"){
     const apiURL = "http://127.0.0.1:5000/api/lessons/all";
     xReq.open("GET", apiURL, true);
+    xReq.setRequestHeader('Authorization', localStorage.getItem("auth"));
     xReq.send();
 }
