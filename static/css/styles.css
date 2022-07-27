@@ -245,7 +245,7 @@ label {
     margin-bottom: 3px;
 }
 
-input:not(#checkbox) {
+input:not(#checkbox, #search-filter) {
     font-size: 20px;
     display: block;
     width: 100%;
