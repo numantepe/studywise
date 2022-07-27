@@ -250,7 +250,7 @@ xReq.onreadystatechange = function () {
     if (this.readyState === 4 && this.status === 200){
         let response = this.responseText;
         if(this.responseText === "INVALID AUTH KEY"){
-            setTimeout(function () {window.location.replace(`${webURL}/login`)}, 500);
+            setTimeout(function () {window.location.replace(`${webURL}/login`)}, 200);
         }
         else{
             let convertedResponse = JSON.parse(response);
