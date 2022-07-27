@@ -1,6 +1,6 @@
 "use strict";
 {
-    let registerForm = document.querySelector("#register-new-user");
+    let webURL = "https://studywise.herokuapp.com";
     let msg = document.querySelector(".msg");
     let username = document.querySelector("#username");
     let email = document.querySelector("#email");
@@ -22,11 +22,11 @@
                         }
                         else {
                             localStorage.setItem("auth", this.responseText);
-                            window.location.replace("http://127.0.0.1:5000/");
+                            window.location.replace(`${webURL}/`);
                         }
                     }
                 };
-                const apiURL = "http://127.0.0.1:5000/register/new-user";
+                const apiURL = `${webURL}/register/new-user`;
                 xhttp.open("POST", apiURL, true);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send(`username=${username.value}&email=${email.value}&password=${password.value}`);

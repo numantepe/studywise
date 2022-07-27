@@ -1,3 +1,6 @@
+{
+let webURL = "https://studywise.herokuapp.com"
+
 document.querySelector("#logout").addEventListener("click", function (e) {
     e.preventDefault();
     let xhttp = new XMLHttpRequest();
@@ -7,12 +10,13 @@ document.querySelector("#logout").addEventListener("click", function (e) {
             console.log("Response Type " + this.responseType);
             console.log("Response Text " + this.responseText);
             localStorage.removeItem("auth");
-            window.location.replace("http://127.0.0.1:5000/login");
+            window.location.replace(`${webURL}/login`);
         }
     };
 
-    const apiURL = "http://127.0.0.1:5000/logout";
+    const apiURL = `${webURL}/logout`;
     xhttp.open("GET", apiURL, true);
     xhttp.setRequestHeader("Authorization", localStorage.getItem("auth"));
     xhttp.send();
 });
+}
