@@ -1,6 +1,7 @@
 "use strict";
 {
     let webURL = "https://studywise.herokuapp.com";
+    //let webURL = "http://127.0.0.1:5000";
     // Database
     function send_message_to_db(method, course, topic, option) {
         let xhttp = new XMLHttpRequest();
@@ -9,7 +10,7 @@
                 console.log("Response Type " + this.responseType);
                 console.log("Response Text " + this.responseText);
                 if (this.responseText === "INVALID AUTH KEY") {
-                    setTimeout(function () { window.location.replace(`${webURL}/login`); }, 500);
+                    setTimeout(function () { window.location.replace(`${webURL}/login`); }, 200);
                 }
             }
         };

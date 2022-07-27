@@ -1,9 +1,42 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for
-import sqlite3
+from flask import Flask, request, render_template, jsonify
+# import sqlite3
 import datetime
 import random
 
 DATABASE = "app.db"
+
+import os
+import urllib.parse as up
+import psycopg2
+
+up.uses_netloc.append("postgres")
+DATABASE_URL = up.urlparse(os.environ["DATABASE_URL"])
+
+#conn = psycopg2.connect(database=db_url.path[1:],
+#                        user=db_url.username,
+#                        password=db_url.password,
+#                        host=db_url.hostname,
+#                        port=db_url.port)
+#
+#c = conn.cursor()
+
+#c.execute("""CREATE TABLE lessons (
+#            username text,
+#            course text,
+#            topic text,
+#            next_recap_date_year integer, 
+#            next_recap_date_month integer, 
+#            next_recap_date_day integer, 
+#            days integer);""")
+#
+#c.execute("""CREATE TABLE users (
+#            username text,
+#            email text,
+#            password text,
+#            auth text);""")
+
+#conn.commit()
+#conn.close()
 
 #conn = sqlite3.connect("lessons.db")
 #
@@ -35,11 +68,15 @@ def create_new_auth_key() -> str:
     
     return new_auth_key
 
-def get_username_from_auth_key(db : str, auth : str) -> str:
-    conn = sqlite3.connect(db)
+def get_username_from_auth_key(db_url : str, auth : str) -> str:
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor()
 
-    c.execute("SELECT * FROM users WHERE auth=:auth", {"auth": auth})
+    c.execute("SELECT * FROM users WHERE auth=%s", (auth,))
 
     user = c.fetchone()
 
@@ -50,11 +87,15 @@ def get_username_from_auth_key(db : str, auth : str) -> str:
     
     return username
 
-def is_auth_key_valid(db : str, auth : str) -> bool:
-    conn = sqlite3.connect(db)
+def is_auth_key_valid(db_url : str, auth : str) -> bool:
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor()
 
-    c.execute("SELECT * FROM users WHERE auth=:auth", {"auth": auth})
+    c.execute("SELECT * FROM users WHERE auth=%s", (auth,))
     
     user = c.fetchone()
 
@@ -68,22 +109,20 @@ def is_auth_key_valid(db : str, auth : str) -> bool:
 
 ##### Lessons #####
 
-def insert_lesson(db : str, username : str, course : str, topic : str) -> None:
+def insert_lesson(db_url : str, username : str, course : str, topic : str) -> None:
     today = datetime.date.today()
     days = 0
 
-    conn = sqlite3.connect(db)
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor() 
 
-    c.execute("INSERT INTO lessons VALUES (:username, :course, :topic, :next_recap_date_year, \
-    :next_recap_date_month, :next_recap_date_day, :days)",
-    {"username" : username,
-    "course" : course, 
-    "topic": topic, 
-    "next_recap_date_year": today.year, 
-    "next_recap_date_month": today.month, 
-    "next_recap_date_day": today.day,
-    "days": days})
+    c.execute("INSERT INTO lessons (username, course, topic, next_recap_date_year, \
+    next_recap_date_month, next_recap_date_day, days) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+    (username, course, topic, today.year, today.month, today.day, days))
 
     conn.commit()
     conn.close()
@@ -92,64 +131,72 @@ def insert_lesson(db : str, username : str, course : str, topic : str) -> None:
 #insert_lesson(DATABASE, "Biology", "Digestive System")
 #insert_lesson(DATABASE, "Geography", "Provinces of Canada")
 
-def update_lesson_finish(db : str, username : str, course : str, topic : str) -> None:
+def update_lesson_finish(db_url : str, username : str, course : str, topic : str) -> None:
     today = datetime.date.today()
 
-    conn = sqlite3.connect(db)
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor() 
 
-    c.execute("SELECT * FROM lessons WHERE username=:username AND course=:course AND topic=:topic",
-    {"username" : username,
-    "course": course, 
-    "topic": topic})
+    c.execute("SELECT * FROM lessons WHERE username=%s AND course=%s AND topic=%s",
+    (username, course, topic))
     lesson = c.fetchone()
     updated_lesson_new_days = lesson[6] + 1
     updated_lesson_new_next_recap_date = today + datetime.timedelta(days=updated_lesson_new_days)
-    c.execute("UPDATE lessons SET next_recap_date_year=:next_recap_date_year, \
-    next_recap_date_month=:next_recap_date_month, \
-    next_recap_date_day=:next_recap_date_day, \
-    days=:days WHERE course=:course AND topic=:topic",
-                {"next_recap_date_year": updated_lesson_new_next_recap_date.year,
-                 "next_recap_date_month": updated_lesson_new_next_recap_date.month,
-                 "next_recap_date_day": updated_lesson_new_next_recap_date.day,
-                 "days": updated_lesson_new_days,
-                 "course": course,
-                 "topic": topic})
+    c.execute("UPDATE lessons SET next_recap_date_year=%s, \
+    next_recap_date_month=%s, \
+    next_recap_date_day=%s, \
+    days=%s WHERE course=%s AND topic=%s",
+                (updated_lesson_new_next_recap_date.year,
+                 updated_lesson_new_next_recap_date.month,
+                 updated_lesson_new_next_recap_date.day,
+                 updated_lesson_new_days,
+                 course,
+                 topic))
 
     conn.commit()
     conn.close()
 
-def update_lesson_delay(db : str, username : str, course : str, topic : str) -> None:
+def update_lesson_delay(db_url : str, username : str, course : str, topic : str) -> None:
     today = datetime.date.today()
 
-    conn = sqlite3.connect(db)
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor() 
 
-    c.execute("SELECT * FROM lessons WHERE username=:username AND course=:course AND topic=:topic",
-    {"username" : username,
-    "course": course, 
-    "topic": topic})
+    c.execute("SELECT * FROM lessons WHERE username=%s AND course=%s AND topic=%s",
+    (username, course, topic))
     lesson = c.fetchone()
     updated_lesson_new_next_recap_date = today + datetime.timedelta(days=1)
-    c.execute("UPDATE lessons SET next_recap_date_year=:next_recap_date_year, \
-    next_recap_date_month=:next_recap_date_month, \
-    next_recap_date_day=:next_recap_date_day WHERE course=:course AND topic=:topic",
-                {"next_recap_date_year": updated_lesson_new_next_recap_date.year,
-                 "next_recap_date_month": updated_lesson_new_next_recap_date.month,
-                 "next_recap_date_day": updated_lesson_new_next_recap_date.day,
-                 "course": course,
-                 "topic": topic})
+    c.execute("UPDATE lessons SET next_recap_date_year=%s, \
+    next_recap_date_month=%s, \
+    next_recap_date_day=%s WHERE course=%s AND topic=%s",
+                (updated_lesson_new_next_recap_date.year,
+                 updated_lesson_new_next_recap_date.month,
+                 updated_lesson_new_next_recap_date.day,
+                 course,
+                 topic))
 
     conn.commit()
     conn.close()
 
-def get_lesson_list_of_todays_schedule(db : str, username : str) -> list:
+def get_lesson_list_of_todays_schedule(db_url : str, username : str) -> list:
     today = datetime.date.today()
 
-    conn = sqlite3.connect(db)
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor() 
   
-    c.execute("SELECT * FROM lessons WHERE username=:username", {"username" : username}) 
+    c.execute("SELECT * FROM lessons WHERE username=%s", (username,)) 
 
     lesson_list = [] 
 
@@ -163,13 +210,17 @@ def get_lesson_list_of_todays_schedule(db : str, username : str) -> list:
 
     return lesson_list
 
-def get_all_lessons(db : str, username : str) -> list:
+def get_all_lessons(db_url : str, username : str) -> list:
     today = datetime.date.today()
 
-    conn = sqlite3.connect(db)
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor() 
     
-    c.execute("SELECT * FROM lessons WHERE username=:username", {"username" : username}) 
+    c.execute("SELECT * FROM lessons WHERE username=%s", (username,)) 
 
     lesson_list = [] 
 
@@ -181,61 +232,77 @@ def get_all_lessons(db : str, username : str) -> list:
 
     return lesson_list
 
-def remove_lesson(db : str, username : str, course : str, topic : str) -> None:
-    conn = sqlite3.connect(db)
+def remove_lesson(db_url : str, username : str, course : str, topic : str) -> None:
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor()     
 
-    c.execute("DELETE FROM lessons WHERE username=:username AND course=:course AND topic=:topic", 
-    {"username" : username, "course": course, "topic": topic})
+    c.execute("DELETE FROM lessons WHERE username=%s AND course=%s AND topic=%s", 
+    (username, course, topic))
 
     conn.commit()
     conn.close()
 
-def remove_lessons(db : str, username : str, lesson_list_json) -> None:
+def remove_lessons(db_url : str, username : str, lesson_list_json) -> None:
     for lesson in lesson_list_json:
         remove_lesson(db, username, lesson["course"], lesson["topic"])
 
 ##### Users #####
 
-def insert_user(db : str, username : str, email : str, password : str) -> None:
-    conn = sqlite3.connect(db)
+def insert_user(db_url : str, username : str, email : str, password : str) -> None:
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor() 
 
-    c.execute("INSERT INTO users VALUES (:username, :email, :password, :auth)",
-    {"username" : username, 
-    "email": email, 
-    "password": password, 
-    "auth": "LOGGED OUT" 
-    })
+    c.execute("INSERT INTO users (username, email, password, auth) VALUES (%s, %s, %s, %s)",
+    (username, email, password, "LOGGED OUT" ))
 
     conn.commit()
     conn.close()
 
-def set_users_new_auth_key(db : str, username : str, new_auth_key : str) -> None:
-    conn = sqlite3.connect(db)
+def set_users_new_auth_key(db_url : str, username : str, new_auth_key : str) -> None:
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor()
 
-    c.execute("UPDATE users SET auth=:auth WHERE username=:username", 
-    {"auth" : new_auth_key, "username" : username})
+    c.execute("UPDATE users SET auth=%s WHERE username=%s", 
+    (new_auth_key, username))
 
     conn.commit()
     conn.close()
 
-def log_out_user(db : str, username : str) -> None:
-    conn = sqlite3.connect(db)
+def log_out_user(db_url : str, username : str) -> None:
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor()
 
-    c.execute("UPDATE users SET auth=:auth WHERE username=:username", 
-    {"auth" : "LOGGED OUT", "username" : username})
+    c.execute("UPDATE users SET auth=%s WHERE username=%s", 
+    ("LOGGED OUT", username))
 
     conn.commit()
     conn.close()
 
-def does_username_exist(db : str, username : str) -> bool:
-    conn = sqlite3.connect(db)
+def does_username_exist(db_url : str, username : str) -> bool:
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor()
 
-    c.execute("SELECT * FROM users WHERE username=:username", {"username": username})
+    c.execute("SELECT * FROM users WHERE username=%s", (username,))
     
     user = c.fetchone()
 
@@ -247,12 +314,16 @@ def does_username_exist(db : str, username : str) -> bool:
     else:
         return False  
 
-def are_credentials_valid(db : str, username : str, password : str) -> bool:
-    conn = sqlite3.connect(db)
+def are_credentials_valid(db_url : str, username : str, password : str) -> bool:
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
     c = conn.cursor()
 
-    c.execute("SELECT * FROM users WHERE username=:username AND password=:password", 
-    {"username": username, "password": password})
+    c.execute("SELECT * FROM users WHERE username=%s AND password=%s", 
+    (username, password))
     
     user = c.fetchone()
 
@@ -284,12 +355,12 @@ def register():
 def register_new_user():
     new_username = request.form.get("username")
 
-    if not(does_username_exist(DATABASE, new_username)):
-        insert_user(DATABASE, new_username, request.form.get("email"), 
+    if not(does_username_exist(DATABASE_URL, new_username)):
+        insert_user(DATABASE_URL, new_username, request.form.get("email"), 
         request.form.get("password"))
 
         new_auth_key = create_new_auth_key()
-        set_users_new_auth_key(DATABASE, new_username, new_auth_key)
+        set_users_new_auth_key(DATABASE_URL, new_username, new_auth_key)
 
         return new_auth_key 
     else:
@@ -304,10 +375,10 @@ def login_existing_user():
     username = request.form.get("username")
     password = request.form.get("password")
 
-    if does_username_exist(DATABASE, username):
-        if are_credentials_valid(DATABASE, username, password):
+    if does_username_exist(DATABASE_URL, username):
+        if are_credentials_valid(DATABASE_URL, username, password):
             new_auth_key = create_new_auth_key()
-            set_users_new_auth_key(DATABASE, username, new_auth_key)
+            set_users_new_auth_key(DATABASE_URL, username, new_auth_key)
             return new_auth_key  
         else:
             return "INCORRECT PASSWORD"
@@ -318,10 +389,10 @@ def login_existing_user():
 def logout():
     auth_key = request.headers.get("Authorization")
 
-    if is_auth_key_valid(DATABASE, auth_key):
-        username = get_username_from_auth_key(DATABASE, auth_key)
+    if is_auth_key_valid(DATABASE_URL, auth_key):
+        username = get_username_from_auth_key(DATABASE_URL, auth_key)
     
-        log_out_user(DATABASE, username)
+        log_out_user(DATABASE_URL, username)
 
     return "Logged out" 
 
@@ -329,25 +400,25 @@ def logout():
 def interact_with_db():
     auth_key = request.headers.get("Authorization")
 
-    if is_auth_key_valid(DATABASE, auth_key):
-        username = get_username_from_auth_key(DATABASE, auth_key)
+    if is_auth_key_valid(DATABASE_URL, auth_key):
+        username = get_username_from_auth_key(DATABASE_URL, auth_key)
 
         if request.method == "POST":
-            insert_lesson(DATABASE, username, request.form.get("course"), request.form.get("topic"))
+            insert_lesson(DATABASE_URL, username, request.form.get("course"), request.form.get("topic"))
             return "New Lesson Received"
         elif request.method == "DELETE":
             if(request.content_type.startswith('application/json')):
-                remove_lessons(DATABASE, username, request.get_json())
+                remove_lessons(DATABASE_URL, username, request.get_json())
                 return "Lesson(s) Deleted"
             else:
-                remove_lesson(DATABASE, username, request.form.get("course"), request.form.get("topic"))
+                remove_lesson(DATABASE_URL, username, request.form.get("course"), request.form.get("topic"))
                 return "Lesson Deleted"
         elif request.method == "PUT":
             if request.form.get("option") == "finish":
-                update_lesson_finish(DATABASE, username, request.form.get("course"), request.form.get("topic"))
+                update_lesson_finish(DATABASE_URL, username, request.form.get("course"), request.form.get("topic"))
                 return "Lesson Studied Today"
             elif request.form.get("option") == "delay":
-                update_lesson_delay(DATABASE, username, request.form.get("course"), request.form.get("topic"))
+                update_lesson_delay(DATABASE_URL, username, request.form.get("course"), request.form.get("topic"))
                 return "Lesson Delayed to Tomorrow"
     else:
         return "INVALID AUTH KEY"
@@ -356,11 +427,11 @@ def interact_with_db():
 def send_todays_schedule():
     auth_key = request.headers.get("Authorization")
     
-    if is_auth_key_valid(DATABASE, auth_key):
-        username = get_username_from_auth_key(DATABASE, auth_key)
+    if is_auth_key_valid(DATABASE_URL, auth_key):
+        username = get_username_from_auth_key(DATABASE_URL, auth_key)
 
         if request.method == "GET":
-            lessons_list = get_lesson_list_of_todays_schedule(DATABASE, username) 
+            lessons_list = get_lesson_list_of_todays_schedule(DATABASE_URL, username) 
             return jsonify(lessons_list)
     else:
         return "INVALID AUTH KEY"
@@ -369,11 +440,11 @@ def send_todays_schedule():
 def send_all_lessons():
     auth_key = request.headers.get("Authorization")
 
-    if is_auth_key_valid(DATABASE, auth_key):
-        username = get_username_from_auth_key(DATABASE, auth_key)
+    if is_auth_key_valid(DATABASE_URL, auth_key):
+        username = get_username_from_auth_key(DATABASE_URL, auth_key)
 
         if request.method == "GET":
-            lesson_list = get_all_lessons(DATABASE, username) 
+            lesson_list = get_all_lessons(DATABASE_URL, username) 
             return jsonify(lesson_list)
     else:
         return "INVALID AUTH KEY"
