@@ -248,7 +248,7 @@ def remove_lesson(db_url : str, username : str, course : str, topic : str) -> No
 
 def remove_lessons(db_url : str, username : str, lesson_list_json) -> None:
     for lesson in lesson_list_json:
-        remove_lesson(db, username, lesson["course"], lesson["topic"])
+        remove_lesson(db_url, username, lesson["course"], lesson["topic"])
 
 ##### Users #####
 
