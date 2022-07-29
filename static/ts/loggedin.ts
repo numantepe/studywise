@@ -285,7 +285,7 @@ xReq.onreadystatechange = function () {
             setTimeout(function () {window.location.replace(`${webURL}/login`)}, 200);
         }
         else{
-            document.querySelector("#logged-in-as").innerHTML = `Logged in as <span id="username">${localStorage.getItem("username")}</span>`
+            document.querySelector("#logged-in-as").innerHTML = `Logged in as <span id="username-welcome">${localStorage.getItem("username")}</span>`
             let convertedResponse = JSON.parse(response);
             let lessons: Lesson[] = convertedResponse;
 
