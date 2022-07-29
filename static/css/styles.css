@@ -140,6 +140,13 @@
     margin: 0 auto;
 }
 
+.forgot {
+    width: 50%;
+    margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+}
+
 /* .lesson-list {
     border-style: solid;
     border-radius: 5px;
@@ -316,4 +323,20 @@ input:not(#checkbox, #search-filter) {
 
 #delete-account:active {
     color: #787878;
+}
+
+/* Forgot */
+
+#botemail {
+    color: #055574;
+}
+
+#forgot {
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+#tutorial {
+    font-size: 14px;
+    margin-top: 20px;
 }

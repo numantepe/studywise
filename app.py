@@ -185,6 +185,10 @@ def view_all_lessons():
 def register():
     return render_template("register.html") 
 
+@app.route("/forgot")
+def forgot():
+    return render_template("forgot.html")
+
 @app.route("/register/new-user", methods = ["POST"])
 def register_new_user():
     new_username = request.form.get("username")
