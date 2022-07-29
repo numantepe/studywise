@@ -1,5 +1,5 @@
 {
-let webURL = "https://studywise.herokuapp.com"
+//let webURL = "https://studywise.herokuapp.com"
 //let webURL = "http://127.0.0.1:5000";
 
 document.querySelector("#logout").addEventListener("click", function (e) {
@@ -10,6 +10,7 @@ document.querySelector("#logout").addEventListener("click", function (e) {
         if (this.readyState === 4 && this.status === 200){
             console.log("Response Type " + this.responseType);
             console.log("Response Text " + this.responseText);
+            localStorage.removeItem("username");
             localStorage.removeItem("auth");
             window.location.replace(`${webURL}/login`);
         }

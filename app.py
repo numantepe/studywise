@@ -335,6 +335,55 @@ def are_credentials_valid(db_url : str, username : str, password : str) -> bool:
     else:
         return False  
 
+def get_user_info_from_username(db_url : str, username : str) -> str:
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM users WHERE username=%s", (username,))
+    
+    user = c.fetchone()
+
+    conn.commit()
+    conn.close()
+
+    return user[0] + " " + user[1] + " " + user[2]
+
+def update_user_info(db_url : str, old_username : str, new_username : str, new_email : str, new_password : str) -> None:
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
+    c = conn.cursor()
+
+    c.execute("UPDATE users SET username=%s, email=%s, password=%s WHERE username=%s", 
+                (new_username, new_email, new_password, old_username))
+
+    if(old_username != new_username): 
+        c.execute("UPDATE lessons SET username=%s WHERE username=%s", (new_username, old_username))
+
+    conn.commit()
+    conn.close()
+
+def delete_account_with_username(db_url : str, username : str) -> None:
+    conn = psycopg2.connect(database=db_url.path[1:],
+                        user=db_url.username,
+                        password=db_url.password,
+                        host=db_url.hostname,
+                        port=db_url.port)
+    c = conn.cursor()
+
+    c.execute("DELETE FROM lessons WHERE username=%s", (username,))
+
+    c.execute("DELETE FROM users WHERE username=%s", (username,))
+
+    conn.commit()
+    conn.close()      
+
 ##### HTTP Server #####
 
 app = Flask(__name__)
@@ -446,6 +495,49 @@ def send_all_lessons():
         if request.method == "GET":
             lesson_list = get_all_lessons(DATABASE_URL, username) 
             return jsonify(lesson_list)
+    else:
+        return "INVALID AUTH KEY"
+
+@app.route("/settings")
+def view_user_settings():
+    return render_template("settings.html")
+
+@app.route("/settings/update", methods = ["PUT"])
+def update_user_settings():
+    auth_key = request.headers.get("Authorization")
+
+    if is_auth_key_valid(DATABASE_URL, auth_key):
+        old_username = get_username_from_auth_key(DATABASE_URL, auth_key)
+        new_username = request.form.get("username")
+        if old_username == new_username or not(does_username_exist(DATABASE_URL, new_username)):
+            update_user_info(DATABASE_URL, old_username, new_username, request.form.get("email"), request.form.get("password"))
+            return "USER INFO SUCCESSFULLY UPDATED"
+        else:
+            return "USERNAME NOT UNIQUE"
+    else:
+        return "INVALID AUTH KEY"
+
+@app.route("/settings/get-user-info")
+def get_user_info():
+    auth_key = request.headers.get("Authorization")
+
+    if is_auth_key_valid(DATABASE_URL, auth_key):
+        username = get_username_from_auth_key(DATABASE_URL, auth_key)
+
+        if request.method == "GET":
+            userinfo = get_user_info_from_username(DATABASE_URL, username) 
+            return userinfo 
+    else:
+        return "INVALID AUTH KEY" 
+
+@app.route("/settings/delete-account", methods = ["DELETE"])
+def delete_account():
+    auth_key = request.headers.get("Authorization")
+
+    if is_auth_key_valid(DATABASE_URL, auth_key):
+        username = get_username_from_auth_key(DATABASE_URL, auth_key)
+        delete_account_with_username(DATABASE_URL, username)
+        return "RIP"
     else:
         return "INVALID AUTH KEY"
 

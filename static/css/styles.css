@@ -87,7 +87,7 @@
     justify-content: space-between;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
-    padding: 0 13%;
+    padding: 0 20%;
     list-style-type: none;
     margin-bottom: 10px;
 }
@@ -119,6 +119,20 @@
     color: #fff;
 }
 
+/* Logged in as "username" */
+#logged-in-as {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    padding: 0 22%;
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+#username {
+    color: #055574;
+    font-size: 19px;
+}
+
 /* Lesson-List container */
 
 .lesson-list-container {
@@ -133,6 +147,10 @@
     border-width: 1px;
     border: none;
 }*/
+
+.lesson-list {
+    font-family: Arial, Helvetica, sans-serif;
+}
 
 /* List Container Top */
 
@@ -236,6 +254,10 @@ h1 {
     font-size: 30px;
 }
 
+h5 {
+    margin-bottom: 20px;
+}
+
 form {
     font-size: 18px;
 }
@@ -270,4 +292,28 @@ input:not(#checkbox, #search-filter) {
     width: 33%;
     margin: 0 auto;
     margin-top: 20px;
+}
+
+#new-to-studywise {
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+/* Settings */
+#delete-account {
+    display: block;
+    width: 33%;
+    margin: 0 auto;
+    margin-top: 100px;
+    font-size: 14px;
+    text-align: center;
+    color: #787878;
+}
+
+#delete-account:hover {
+    color: #ff0000;
+}
+
+#delete-account:active {
+    color: #787878;
 }

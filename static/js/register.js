@@ -1,6 +1,6 @@
 "use strict";
 {
-    let webURL = "https://studywise.herokuapp.com";
+    //let webURL = "https://studywise.herokuapp.com";
     //let webURL = "http://127.0.0.1:5000";
     let msg = document.querySelector(".msg");
     let username = document.querySelector("#username");
@@ -22,6 +22,7 @@
                             msg.textContent = "The username is already taken.";
                         }
                         else {
+                            localStorage.setItem("username", username.value);
                             localStorage.setItem("auth", this.responseText);
                             window.location.replace(`${webURL}/`);
                         }

@@ -1,7 +1,27 @@
 "use strict";
 {
-    let webURL = "https://studywise.herokuapp.com";
+    //let webURL = "https://studywise.herokuapp.com";
     //let webURL = "http://127.0.0.1:5000";
+    // Utilities
+    function toggle_nothing_div() {
+        if (document.querySelectorAll(".lesson").length === 0) {
+            if (window.location.pathname === "/") {
+                let lesson_list = document.querySelector(".lesson-list");
+                lesson_list.innerHTML = `<div class="nothing">Hooray, there is nothing to study!</div>`;
+                lesson_list.style.textAlign = "center";
+            }
+            else if (window.location.pathname === "/view_all_lessons") {
+                let lesson_list = document.querySelector(".lesson-list");
+                lesson_list.innerHTML = `<div class="nothing">You do not have any lessons in the list.</div>`;
+                lesson_list.style.textAlign = "center";
+            }
+        }
+        else {
+            document.querySelector(".nothing").remove();
+            let lesson_list = document.querySelector(".lesson-list");
+            lesson_list.style.textAlign = "left";
+        }
+    }
     // Database
     function send_message_to_db(method, course, topic, option) {
         let xhttp = new XMLHttpRequest();
@@ -64,6 +84,7 @@
                         // SEND MESSAGE TO SERVER
                         send_message_to_db("DELETE", desc.split("-")[0].trim(), desc.split("-")[1].trim(), "");
                         e.target.parentElement.parentElement.remove();
+                        toggle_nothing_div();
                     }
                     else {
                     }
@@ -83,6 +104,7 @@
                     // SEND MESSAGE TO SERVER
                     send_message_to_db("PUT", desc.split("-")[0].trim(), desc.split("-")[1].trim(), "finish");
                     e.target.parentElement.parentElement.remove();
+                    toggle_nothing_div();
                 }
                 else {
                     alert("Something is very wrong...");
@@ -97,6 +119,7 @@
                     // SEND MESSAGE TO SERVER
                     send_message_to_db("PUT", desc.split("-")[0].trim(), desc.split("-")[1].trim(), "delay");
                     e.target.parentElement.parentElement.remove();
+                    toggle_nothing_div();
                 }
                 else {
                     alert("Something is very wrong...");
@@ -116,6 +139,7 @@
                 // SEND MESSAGE TO SERVER
                 send_message_to_db("POST", new_lesson.course, new_lesson.topic, "");
                 add_new_lesson_to_lesson_list(lesson_list, new_lesson);
+                toggle_nothing_div();
             }
             else {
             }
@@ -198,6 +222,7 @@
                     btn.classList.remove("btn-yellow");
                     btn.classList.add("btn-green");
                     btn.textContent = "Select All";
+                    toggle_nothing_div();
                 }
                 else {
                 }
@@ -218,9 +243,11 @@
                 setTimeout(function () { window.location.replace(`${webURL}/login`); }, 200);
             }
             else {
+                document.querySelector("#logged-in-as").innerHTML = `Logged in as <span id="username">${localStorage.getItem("username")}</span>`;
                 let convertedResponse = JSON.parse(response);
                 let lessons = convertedResponse;
                 set_up_lesson_list(lessons);
+                toggle_nothing_div();
             }
         }
         else {

@@ -8,26 +8,29 @@
     <body>
         <ul id="navbar">
             <span id="navbar-left">
-                <a id="logo-a" href="/login">
+                <a id="logo-a" href="/">
                     <li id="logo">StudyWise</li>
                 </a>
             </span>
-            <span id="navbar-right">
-                <a href="/register">
+            <span id="navbar-right">   
+                <!-- <a href="/register">
                     <li>Register</li>
                 </a>
                 <a href="/login">
                     <li>Log in</li>
+                </a> -->
+                <a href="/setings">
+                    <li>Settings</li>
                 </a>
-                <!-- <li id="logout">Log out</li> -->
+                <li id="logout">Log out</li>
             </span>
         </ul>
         <div class="form-container">
-            <form id="register-new-user">
-                <h1>Register New User</h1>
+            <form id="user-settings">
+                <h5>You can change your account info by editting any of the fields below and then clicking the update button.</h5>
                 <div class="msg"></div>
                 <div>
-                    <label for="username">New Username:</label>
+                    <label for="username">Username:</label>
                     <input type="text" id="username">
                 </div>
                 <div>
@@ -35,12 +38,8 @@
                     <input type="text" id="email">
                 </div>
                 <div>
-                    <label for="password">Password:</label>
+                    <label for="passowrd">Password:</label>
                     <input type="password" id="password">
-                </div>
-                <div>
-                    <label for="password">Confirm Password:</label>
-                    <input type="password" id="confirm-password">
                 </div>
                 <div>
                     <span id="show-passwords">
@@ -48,12 +47,13 @@
                     </span>
                     <input type="checkbox" id="checkbox">
                 </div>
-                <div>
-                    <button type="button" class="btn btn-blue" id="form-submit">Submit</button>
-                </div>
-           </form>
+                <button type="button" class="btn btn-blue" id="form-submit">Update</button>
+                <div id="delete-account">Delete Account</a>
+            </form>
         </div>
         <script src="/static/js/index.js"></script>
-        <script src="/static/js/register.js"></script>
-   </body>
+        <script src="/static/js/settings.js"></script>
+        <script src="/static/js/loggedin.js"></script> <!-- NEXT TIME DO index.js FOR BETTER ARCH-->
+        <script src="/static/js/logout.js"></script>
+    </body>
 </html>
