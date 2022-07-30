@@ -1,5 +1,5 @@
 # studywise
-StudyWise - Your Smart Study/Recap Schedule Creator App - Contact botemail597@gmail.com for any inquiries
+StudyWise - Your Smart Study/Review Schedule Creator App - Contact botemail597@gmail.com for any inquiries
 
 Hello there, welcome! 
 
@@ -7,8 +7,10 @@ Would you like to get straight As in your courses at school and impress your fam
 
 If the answer is yes, then you've come to the right place!
 
-StudyWise is a website that systematically creates a daily recap/study schedule 
+StudyWise is a website that systematically creates a daily review/study schedule 
 using simple and yet effective scientifically proven methods from the book, A mind for Numbers, written by Barbara Oakley. 
+
+Using this website will significantly help you retain any information or material in the long term.
 
 You can register to the website below right now!
 
@@ -22,7 +24,7 @@ To add a lesson, click the "Add New Lesson" button and enter the course name/cod
 
 ![Alt text](/img/s2.png)
 
-If you finish studying the lesson for that day, click the "Finish" button to indicate that you studied/reviewed/recapped.
+If you finish studying the lesson for that day, click the "Finish" button to indicate that you studied/reviewed/restudied.
 
 If you would like to delay studying the lesson and postpone it to the following day, then click the "Delay" button.
 
