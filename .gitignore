@@ -1,4 +1,4 @@
 .DS_Store
 keys.sh
 __pycache__/
-/**/*.js
+/**/*.ts
