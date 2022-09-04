@@ -78,7 +78,7 @@ function add_new_lesson_to_lesson_list(lesson_list : Element, new_lesson: Lesson
                 <button type="button" class="btn btn-green finish">Finish</button>
                 <button type="button" class="btn btn-yellow delay">Delay</button>
             </span>
-            <span class="lesson-text">${new_lesson.course} - ${new_lesson.topic}</span>
+            <span class="lesson-text">${new_lesson.course} --- ${new_lesson.topic}</span>
             </li>`);
         }
         else{
@@ -87,7 +87,7 @@ function add_new_lesson_to_lesson_list(lesson_list : Element, new_lesson: Lesson
                 <button type="button" class="btn btn-green finish">Finish</button>
                 <button type="button" class="btn btn-yellow delay">Delay</button>
             </span>
-            <span class="lesson-text">${new_lesson.course} - <a href="${new_lesson.topic}" target="_blank">${new_lesson.topic}</a></span>
+            <span class="lesson-text">${new_lesson.course} --- <a href="${new_lesson.topic}" target="_blank">${new_lesson.topic}</a></span>
             </li>`);
         }
     }else if (window.location.pathname === "/view_all_lessons"){
@@ -95,7 +95,7 @@ function add_new_lesson_to_lesson_list(lesson_list : Element, new_lesson: Lesson
     <span class="buttons">
         <button type="button" class="btn btn-red delete">Delete</button>
     </span>
-    <span class="lesson-text">${new_lesson.course} - ${new_lesson.topic}</span>
+    <span class="lesson-text">${new_lesson.course} --- ${new_lesson.topic}</span>
     </li>`);       
     }
 
@@ -107,7 +107,7 @@ function add_new_lesson_to_lesson_list(lesson_list : Element, new_lesson: Lesson
             let desc = e.target.parentElement.nextElementSibling.textContent; 
             if (confirm(`Are you sure to delete the lesson below? This action cannot be undone.\n${desc}\n\nClick "Ok" if yes, otherwise click "Cancel".`) == true) {
                 // SEND MESSAGE TO SERVER
-                send_message_to_db("DELETE", desc.split("-")[0].trim(), desc.split("-")[1].trim(), "");
+                send_message_to_db("DELETE", desc.split("---")[0].trim(), desc.split("---")[1].trim(), "");
                 e.target.parentElement.parentElement.remove();
 
                 toggle_nothing_div();
@@ -126,7 +126,7 @@ function add_new_lesson_to_lesson_list(lesson_list : Element, new_lesson: Lesson
             if (e.target instanceof Element){
                 let desc = e.target.parentElement.nextElementSibling.textContent; 
                 // SEND MESSAGE TO SERVER
-                send_message_to_db("PUT", desc.split("-")[0].trim(), desc.split("-")[1].trim(), "finish");
+                send_message_to_db("PUT", desc.split("---")[0].trim(), desc.split("---")[1].trim(), "finish");
                 e.target.parentElement.parentElement.remove();
                 
                 toggle_nothing_div();
@@ -141,7 +141,7 @@ function add_new_lesson_to_lesson_list(lesson_list : Element, new_lesson: Lesson
             if (e.target instanceof Element){
                 let desc = e.target.parentElement.nextElementSibling.textContent; 
                 // SEND MESSAGE TO SERVER
-                send_message_to_db("PUT", desc.split("-")[0].trim(), desc.split("-")[1].trim(), "delay");
+                send_message_to_db("PUT", desc.split("---")[0].trim(), desc.split("---")[1].trim(), "delay");
                 e.target.parentElement.parentElement.remove();
 
                 toggle_nothing_div();
@@ -256,7 +256,7 @@ function set_up_lesson_list(lessons : Lesson[]) : void {
                         let desc = li.firstElementChild.nextElementSibling.textContent; 
                         
                         // SEND MESSAGE TO SERVER
-                        lesson_list_json.push({"course" : desc.split("-")[0].trim(), "topic": desc.split("-")[1].trim()}); 
+                        lesson_list_json.push({"course" : desc.split("---")[0].trim(), "topic": desc.split("---")[1].trim()}); 
                         li.remove();
                     }
                 }
