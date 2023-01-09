@@ -1,6 +1,8 @@
 # studywise
 StudyWise - Your Smart Study/Review Schedule Creator App - Contact botemail597@gmail.com for any inquiries
 
+IMPORTANT NOTE: The Heroku link is currently not working as a result of Heroku not offering Fier Tier Hosting anymore. I will hopefully migrate my website to some other platform as soon as possible. In the meantime you can fork the code and run it on your local machine!
+
 Hello there, welcome! 
 
 Would you like to get straight As in your courses at school and impress your family and friends? 
